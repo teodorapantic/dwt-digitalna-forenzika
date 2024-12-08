@@ -37,21 +37,17 @@ def embed_bits_in_coefficients(coeffs, bits):
     for i, bit in enumerate(bits):
         val = flat_coeffs[i]
         if (val % 2) != bit:
-            # Flip LSB
             val = val - 1 if (val % 2 == 1) else val + 1
         flat_coeffs[i] = val
     return flat_coeffs.reshape(coeffs.shape)
 
 def embed_image_in_image(cover_image_path, secret_image_path, stego_image_path):
-    # Convert the cover image to grayscale
     cover = Image.open(cover_image_path).convert('L')
     cover_arr = np.array(cover, dtype=np.float32)
     
-    # DWT on cover image
     coeffs2 = pywt.dwt2(cover_arr, 'haar')
     LL, (LH, HL, HH) = coeffs2
 
-    # Convert these sub-bands to integers by rounding
     LL_int = np.rint(LL).astype(np.int32)
     LH_int = np.rint(LH).astype(np.int32)
     HL_int = np.rint(HL).astype(np.int32)
